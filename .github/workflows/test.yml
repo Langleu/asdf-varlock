@@ -7,12 +7,20 @@ on:
 jobs:
   plugin-test:
     runs-on: ubuntu-latest
+    env:
+      GITHUB_API_TOKEN: ${{ github.token }}
     steps:
       - name: Checkout
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd
+
+      - name: Setup asdf
+        uses: asdf-vm/actions/setup@b7bcd026f18772e44fe1026d729e1611cc435d47
+        with:
+          asdf_branch: v0.19.0
 
       - name: Test plugin
         uses: asdf-vm/actions/plugin-test@b7bcd026f18772e44fe1026d729e1611cc435d47
         with:
           asdf_branch: v0.19.0
+          skip_install: true
           command: varlock --help
