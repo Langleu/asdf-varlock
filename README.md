@@ -4,10 +4,10 @@
 
 ## Install
 
-Replace `<plugin-repo-url>` with the Git URL for this plugin repository, then:
+Add the plugin from the published repository:
 
 ```sh
-asdf plugin add varlock <plugin-repo-url>
+asdf plugin add varlock https://github.com/Langleu/asdf-varlock.git
 asdf install varlock latest
 asdf global varlock latest
 ```

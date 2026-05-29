@@ -25,7 +25,6 @@ VERSION_RE = re.compile(
     r"^(?:varlock@|v)?(?P<version>\d+\.\d+\.\d+(?:[-+][0-9A-Za-z.-]+)?)$"
 )
 CHECKSUM_RE = re.compile(r"(?P<digest>[a-fA-F0-9]{64})")
-FIXTURE_URL_RE = re.compile(r"^fixture://(?P<name>.+)$")
 
 
 class FetchError(RuntimeError):
@@ -45,42 +44,7 @@ def api_token() -> str:
     return ""
 
 
-def fixture_releases_file() -> Path | None:
-    value = os.environ.get("ASDF_VARLOCK_RELEASES_FILE", "").strip()
-    if not value:
-        return None
-    return Path(value).expanduser()
-
-
-def fixture_mirror_dir() -> Path | None:
-    value = os.environ.get("ASDF_VARLOCK_MIRROR_DIR", "").strip()
-    if not value:
-        return None
-    return Path(value).expanduser()
-
-
-def bundled_fixture_dir() -> Path | None:
-    candidate = Path(__file__).resolve().parent.parent / "test" / "fixtures" / "varlock"
-    if candidate.is_dir():
-        return candidate
-    return None
-
-
 def http_get(url: str, accept: str = "application/vnd.github+json") -> tuple[bytes, dict[str, str]]:
-    if url.startswith("file://"):
-        path = Path(url[7:])
-        return path.read_bytes(), {}
-
-    fixture_match = FIXTURE_URL_RE.match(url)
-    if fixture_match:
-        mirror_dir = fixture_mirror_dir()
-        if mirror_dir is None:
-            mirror_dir = bundled_fixture_dir()
-        if mirror_dir is None:
-            die("fixture:// URL used without ASDF_VARLOCK_MIRROR_DIR or bundled fixtures")
-        path = mirror_dir / fixture_match.group("name")
-        return path.read_bytes(), {}
-
     headers = {
         "Accept": accept,
         "User-Agent": USER_AGENT,
@@ -137,22 +101,6 @@ def parse_link_header(value: str) -> dict[str, str]:
 
 
 def fetch_releases() -> list[dict[str, object]]:
-    local_releases = fixture_releases_file()
-    if local_releases is not None:
-        try:
-            data = json.loads(local_releases.read_text(encoding="utf-8"))
-        except FileNotFoundError:
-            die(f"Release fixture file not found: {local_releases}")
-        except json.JSONDecodeError as exc:
-            die(f"Failed to parse release fixture file {local_releases}: {exc}")
-        if not isinstance(data, list):
-            die(f"Release fixture file must contain a JSON list: {local_releases}")
-        releases: list[dict[str, object]] = []
-        for item in data:
-            if isinstance(item, dict):
-                releases.append(item)
-        return releases
-
     try:
         releases: list[dict[str, object]] = []
         url = f"{API_BASE}/releases?per_page=100"
@@ -165,26 +113,8 @@ def fetch_releases() -> list[dict[str, object]]:
                     releases.append(item)
             url = parse_link_header(headers.get("Link", "")).get("next", "")
         return releases
-    except FetchError:
-        fallback = bundled_fixture_dir()
-        if fallback is None:
-            raise
-
-        fixture_releases = fallback / "releases.json"
-        if fixture_releases.exists():
-            try:
-                data = json.loads(fixture_releases.read_text(encoding="utf-8"))
-            except json.JSONDecodeError as exc:
-                die(f"Failed to parse bundled release fixture {fixture_releases}: {exc}")
-            if not isinstance(data, list):
-                die(f"Bundled release fixture must contain a JSON list: {fixture_releases}")
-            releases = []
-            for item in data:
-                if isinstance(item, dict):
-                    releases.append(item)
-            return releases
-
-        raise
+    except FetchError as exc:
+        die(str(exc))
 
 
 def normalize_version(tag_name: str) -> str | None:
