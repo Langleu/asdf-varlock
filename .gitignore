@@ -1,0 +1,13 @@
+# asdf test/runtime state
+.asdf/
+.asdf-test/
+.tmp-asdf/
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local macOS noise
+.DS_Store
