@@ -115,7 +115,8 @@ download_release_asset() {
 	local url
 
 	url="$(release_url_for_asset "$version" "$asset_name")"
-	printf '* Downloading %s release %s (%s)...\n' "$TOOL_NAME" "$version" "$asset_name"
+	printf 'Downloading %s %s...\n' "$TOOL_NAME" "$version"
+	printf -- '-> %s\n' "$url"
 	curl "${curl_opts[@]}" -o "$filename" -C - "$url" || fail "Could not download $url"
 }
 
