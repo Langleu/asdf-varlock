@@ -1,5 +1,10 @@
-#!/usr/bin/env sh
-set -eu
+#!/usr/bin/env bash
 
-script_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
-exec python3 "$script_dir/../lib/varlock_asdf.py" help-links "$@"
+set -euo pipefail
+
+cat <<'EOF'
+* [Varlock installation docs](https://varlock.dev/getting-started/installation/)
+* [Varlock CLI reference](https://varlock.dev/reference/cli-commands/)
+* [Varlock releases](https://github.com/dmno-dev/varlock/releases)
+* [asdf plugin creation guide](https://asdf-vm.com/plugins/create.html)
+EOF

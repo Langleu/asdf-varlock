@@ -2,6 +2,8 @@
 
 `asdf` plugin for installing the official [Varlock](https://github.com/dmno-dev/varlock) CLI from GitHub Releases.
 
+This plugin follows the shell-based layout from the [asdf plugin template](https://github.com/asdf-vm/asdf-plugin-template/tree/main): `bin/list-all`, `bin/latest-stable`, `bin/download`, and `bin/install` are all implemented in shell.
+
 ## Install
 
 Add the plugin from the published repository:
@@ -14,7 +16,7 @@ asdf global varlock latest
 
 ## What it installs
 
-This plugin installs the standalone `varlock` binary, not the npm package.
+This plugin installs the standalone `varlock` CLI from GitHub Releases.
 
 ## Supported platforms
 
@@ -22,10 +24,16 @@ This plugin installs the standalone `varlock` binary, not the npm package.
 - macOS `arm64`
 - Linux `x86_64`
 - Linux `arm64`
+- Linux musl `x86_64`
+- Linux musl `arm64`
 
 ## Requirements
 
-- `python3`
+- `bash`
+- `curl`
+- `git`
+- `tar`
+- `sha256sum` or `shasum`
 
 ## Links
 
@@ -33,9 +41,10 @@ This plugin installs the standalone `varlock` binary, not the npm package.
 - [Varlock CLI reference](https://varlock.dev/reference/cli-commands/)
 - [Varlock releases](https://github.com/dmno-dev/varlock/releases)
 - [asdf plugin creation guide](https://asdf-vm.com/plugins/create.html)
+- [asdf plugin template](https://github.com/asdf-vm/asdf-plugin-template/tree/main)
 
 ## Notes
 
-- Version discovery comes from GitHub Releases.
+- Version discovery comes from GitHub release tags.
 - The plugin normalizes release tags like `v1.3.0` and `varlock@1.3.0` to plain semantic versions.
-- The release download is verified with the SHA-256 digest from GitHub release metadata when available.
+- Downloads are verified with the release `checksums.txt` asset when available.
