@@ -53,17 +53,17 @@ release_url_for_asset() {
 
 platform_name() {
 	case "$(uname -s)" in
-		Darwin) printf 'macos' ;;
-		Linux) printf 'linux' ;;
-		*) fail "Unsupported operating system: $(uname -s)" ;;
+	Darwin) printf 'macos' ;;
+	Linux) printf 'linux' ;;
+	*) fail "Unsupported operating system: $(uname -s)" ;;
 	esac
 }
 
 arch_name() {
 	case "$(uname -m)" in
-		x86_64 | amd64) printf 'x64' ;;
-		arm64 | aarch64) printf 'arm64' ;;
-		*) fail "Unsupported architecture: $(uname -m)" ;;
+	x86_64 | amd64) printf 'x64' ;;
+	arm64 | aarch64) printf 'arm64' ;;
+	*) fail "Unsupported architecture: $(uname -m)" ;;
 	esac
 }
 
@@ -77,13 +77,13 @@ is_musl() {
 	fi
 
 	case "$(uname -m)" in
-		x86_64 | amd64)
-			[ -e /lib/ld-musl-x86_64.so.1 ] && return 0
-			;;
-		arm64 | aarch64)
-			[ -e /lib/ld-musl-aarch64.so.1 ] && return 0
-			[ -e /lib/ld-musl-arm64.so.1 ] && return 0
-			;;
+	x86_64 | amd64)
+		[ -e /lib/ld-musl-x86_64.so.1 ] && return 0
+		;;
+	arm64 | aarch64)
+		[ -e /lib/ld-musl-aarch64.so.1 ] && return 0
+		[ -e /lib/ld-musl-arm64.so.1 ] && return 0
+		;;
 	esac
 
 	return 1
@@ -96,15 +96,15 @@ asset_name_for_current_platform() {
 	arch="$(arch_name)"
 
 	case "$platform" in
-		macos) printf 'varlock-macos-%s.tar.gz' "$arch" ;;
-		linux)
-			if is_musl; then
-				printf 'varlock-linux-musl-%s.tar.gz' "$arch"
-			else
-				printf 'varlock-linux-%s.tar.gz' "$arch"
-			fi
-			;;
-		*) fail "Unsupported platform: $platform" ;;
+	macos) printf 'varlock-macos-%s.tar.gz' "$arch" ;;
+	linux)
+		if is_musl; then
+			printf 'varlock-linux-musl-%s.tar.gz' "$arch"
+		else
+			printf 'varlock-linux-%s.tar.gz' "$arch"
+		fi
+		;;
+	*) fail "Unsupported platform: $platform" ;;
 	esac
 }
 
@@ -174,10 +174,10 @@ resolve_install_version() {
 	local requested_version="$1"
 
 	case "$requested_version" in
-		latest | latest-stable)
-			latest_stable
-			return 0
-			;;
+	latest | latest-stable)
+		latest_stable
+		return 0
+		;;
 	esac
 
 	if version_exists "$requested_version"; then
