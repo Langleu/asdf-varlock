@@ -31,6 +31,10 @@ class FetchError(RuntimeError):
     pass
 
 
+class ReleaseNotFound(RuntimeError):
+    pass
+
+
 def die(message: str, exit_code: int = 1) -> "None":
     print(message, file=sys.stderr)
     raise SystemExit(exit_code)
@@ -177,7 +181,7 @@ def resolve_release(selector: str) -> tuple[str, dict[str, object]]:
             found = (version, release)
 
     if found is None:
-        die(f"Unable to resolve a published Varlock release for: {selector}")
+        raise ReleaseNotFound(selector)
     return found
 
 
@@ -392,7 +396,17 @@ def command_download() -> None:
 
     download_path = Path(download_path_raw).expanduser()
     download_path.mkdir(parents=True, exist_ok=True)
-    version, release, asset = resolve_release_asset(install_version)
+    try:
+        version, release, asset = resolve_release_asset(install_version)
+    except ReleaseNotFound:
+        fallback_version = latest_stable()
+        print(
+            f"Requested Varlock version {install_version} was not published; "
+            f"installing latest stable {fallback_version} instead.",
+            file=sys.stderr,
+        )
+        version, release = resolve_release(fallback_version)
+        asset = select_asset(release)
     asset_name = str(asset.get("name", "varlock"))
     asset_url = str(asset.get("browser_download_url", ""))
     if not asset_url:
