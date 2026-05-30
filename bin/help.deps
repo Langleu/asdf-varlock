@@ -3,10 +3,9 @@
 set -euo pipefail
 
 cat <<'EOF'
-Runtime dependencies:
-* bash
-* curl
-* git
-* tar
-* sha256sum or shasum
+bash
+curl
+git
+tar
+shasum
 EOF

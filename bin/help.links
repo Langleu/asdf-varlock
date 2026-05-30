@@ -3,8 +3,8 @@
 set -euo pipefail
 
 cat <<'EOF'
-* [Varlock installation docs](https://varlock.dev/getting-started/installation/)
-* [Varlock CLI reference](https://varlock.dev/reference/cli-commands/)
-* [Varlock releases](https://github.com/dmno-dev/varlock/releases)
-* [asdf plugin creation guide](https://asdf-vm.com/plugins/create.html)
+Varlock installation docs: https://varlock.dev/getting-started/installation/
+Varlock CLI reference: https://varlock.dev/reference/cli-commands/
+Varlock releases: https://github.com/dmno-dev/varlock/releases
+asdf plugin creation guide: https://asdf-vm.com/plugins/create.html
 EOF
