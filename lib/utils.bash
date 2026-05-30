@@ -194,7 +194,12 @@ resolve_install_version() {
 }
 
 latest_stable() {
-	list_all_versions | sort_versions | tail -n1 | xargs echo
+	local filter="${1:-}"
+	if [ -n "$filter" ]; then
+		list_all_versions | grep "^${filter}" | sort_versions | tail -n1 | xargs echo
+	else
+		list_all_versions | sort_versions | tail -n1 | xargs echo
+	fi
 }
 
 download_version() {
