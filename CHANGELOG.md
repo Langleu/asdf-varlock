@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.1](https://github.com/Langleu/asdf-varlock/compare/1.0.0...v1.0.1) (2026-05-30)
+
+
+### Bug Fixes
+
+* **asdf:** align plugin scripts with official specifications ([#7](https://github.com/Langleu/asdf-varlock/issues/7)) ([d8a926e](https://github.com/Langleu/asdf-varlock/commit/d8a926ea350ebc0c0731776566b266dfde1436b5))
+
 ## 1.0.0 (2026-05-29)
 
 
